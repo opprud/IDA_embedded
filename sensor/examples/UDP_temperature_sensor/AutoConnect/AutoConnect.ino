@@ -11,7 +11,7 @@
 
 /* wifi connection variables */
 //TODO UPDATE AP ssid/pass
-const char* ssid 		= "moj";
+const char* ssid 		= "!insertSSIDtHere!";
 const char* password 	= "deledele";
 bool wifiConnected 		= false;
 
@@ -187,11 +187,12 @@ void loop()
 				Serial.print(", port ");
 				Serial.println(UDP.remotePort());
 
-				/* read the packet into packetBufffer */
-				UDP.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
-				Serial.println(packetBuffer);
-
-				cmd = parseCmd(packetBuffer);
+        /* read the packet into packetBufffer */
+        UDP.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
+        /* print command */
+        Serial.println(packetBuffer);
+        /* and parse */
+        cmd = parseCmd(packetBuffer);
 
 				switch (cmd) {
 					case GET_DATA:
@@ -217,12 +218,14 @@ void loop()
 						UDP.endPacket();
 						Serial.print("Info sent");
 						break;
-					default:
-						break;
+          default:
+            Serial.print("unknown command ! \n");
+            break;
 				}
 			}
-			/* allow data to be sent...*/
-			delay(10);
+      /* allow data to be sent...
+         delay is in ms*/
+      delay(100);
 		}
 
 	}

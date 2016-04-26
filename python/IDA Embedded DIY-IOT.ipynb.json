@@ -1,0 +1,315 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Populating the interactive namespace from numpy and matplotlib\n"
+     ]
+    }
+   ],
+   "source": [
+    "%pylab inline"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": [
+    "import socket as sc\n",
+    "import struct"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": [
+    "s = sc.socket(sc.AF_INET, sc.SOCK_DGRAM)\n",
+    "s.bind(('10.192.95.255',12345))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "(0.11332878470420837,)\n",
+      "(0.9801828861236572,)\n",
+      "(0.05608503893017769,)\n",
+      "(0.4640446901321411,)\n",
+      "(0.507307231426239,)\n",
+      "(0.21044498682022095,)\n",
+      "(0.6186916828155518,)\n",
+      "(0.3362540304660797,)\n",
+      "(0.1278407871723175,)\n",
+      "(0.9907605051994324,)\n",
+      "(0.9050410389900208,)\n",
+      "(0.4049451947212219,)\n",
+      "(0.8088341355323792,)\n",
+      "(0.847037136554718,)\n",
+      "(0.43548092246055603,)\n",
+      "(0.5332039594650269,)\n",
+      "(0.8694713115692139,)\n",
+      "(0.08276582509279251,)\n",
+      "(0.6019705533981323,)\n"
+     ]
+    }
+   ],
+   "source": [
+    "\n",
+    "for i in range(19):\n",
+    "    mes = s.recv(1024)\n",
+    "    print struct.unpack('f',mes)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {
+    "collapsed": false,
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0.909111559391\n",
+      "0.756765127182\n",
+      "0.665212273598\n",
+      "0.938217699528\n",
+      "0.466209948063\n",
+      "0.897455334663\n",
+      "0.239935666323\n",
+      "0.518619656563\n",
+      "0.621031463146\n",
+      "0.794142842293\n",
+      "0.00305560743436\n",
+      "0.556439399719\n",
+      "0.10413864255\n",
+      "0.573708117008\n",
+      "0.411858916283\n",
+      "0.35038626194\n",
+      "0.480933815241\n",
+      "0.709673523903\n",
+      "0.0309662204236\n",
+      "0.698647618294\n",
+      "0.24619205296\n",
+      "0.0714655742049\n",
+      "0.940226614475\n",
+      "0.99150621891\n",
+      "0.156083747745\n",
+      "0.509603738785\n",
+      "0.780001938343\n",
+      "0.512827157974\n",
+      "0.0432613715529\n",
+      "0.101417824626\n",
+      "0.0226977467537\n",
+      "0.602292478085\n",
+      "0.190193936229\n",
+      "0.672353029251\n",
+      "0.578944087029\n",
+      "0.116693370044\n",
+      "0.202578932047\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "from numpy import pi\n",
+    "\n",
+    "from bokeh.client.session import ClientSession\n",
+    "from bokeh.client import push_session\n",
+    "from bokeh.driving import cosine\n",
+    "from bokeh.plotting import figure, curdoc\n",
+    "\n",
+    "curdoc().clear()\n",
+    "N = 80\n",
+    "x = np.linspace(0, 4*pi, N)\n",
+    "y = sin(x) #np.zeros(N)#\n",
+    "\n",
+    "p = figure()\n",
+    "r1 = p.line([0, 4*pi], [-1, 1], color=\"firebrick\")\n",
+    "r2 = p.line(x, y, color=\"navy\", line_width=4)\n",
+    "\n",
+    "# open a session to keep our local document in sync with server\n",
+    "session = ClientSession(session_id='My_new_plot')\n",
+    "session.push(curdoc())\n",
+    "\n",
+    "@cosine(w=0.03)\n",
+    "def update(step):\n",
+    "    r2.data_source.data[\"y\"] = y * step\n",
+    "    r2.glyph.line_alpha = 1 - 0.8 * abs(step)\n",
+    "\n",
+    "curdoc().add_periodic_callback(update, 50)\n",
+    "\n",
+    "session.show() # open the document in a browser\n",
+    "\n",
+    "session.loop_until_closed() # run forever"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": [
+    "N = 80\n",
+    "x = np.linspace(0,1,num=N)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "from bokeh.plotting import figure, curdoc\n",
+    "from bokeh.client.session import ClientSession\n",
+    "import select\n",
+    "s.setblocking(0)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0.14362628758\n",
+      "0.0109480032697\n",
+      "0.987934410572\n",
+      "0.176737621427\n",
+      "0.986939847469\n",
+      "0.829056739807\n",
+      "0.743951261044\n",
+      "0.952745139599\n",
+      "0.61839056015\n",
+      "0.663499176502\n",
+      "0.673974394798\n",
+      "0.561315834522\n",
+      "0.134358853102\n",
+      "0.272432237864\n",
+      "0.700482547283\n",
+      "0.155093684793\n",
+      "0.270764917135\n",
+      "0.309639811516\n",
+      "0.443142265081\n",
+      "0.44621527195\n",
+      "0.200039073825\n",
+      "0.490455538034\n",
+      "0.646489202976\n",
+      "0.609492540359\n",
+      "0.935576021671\n",
+      "0.868792235851\n",
+      "0.712563157082"
+     ]
+    }
+   ],
+   "source": [
+    "y = np.zeros(N)\n",
+    "\n",
+    "curdoc().clear()\n",
+    "\n",
+    "\n",
+    "#if session: \n",
+    "#    session.close()\n",
+    "    \n",
+    "p = figure()\n",
+    "r2 = p.line(x, y, color=\"navy\", line_width=4)\n",
+    "\n",
+    "session = ClientSession(session_id='My_new_plot')\n",
+    "session.push(curdoc())\n",
+    "\n",
+    "def update_():\n",
+    "    readers,_,_ = select.select([s],[],[])\n",
+    "    if readers:\n",
+    "        mes = s.recv(128)\n",
+    "        fl = struct.unpack('f',mes)[0]\n",
+    "        print fl\n",
+    "        y[:-1] = y[1:]\n",
+    "        y[-1] = fl\n",
+    "    r2.data_source.data[\"y\"] = y\n",
+    "\n",
+    "curdoc().add_periodic_callback(update_, 50)\n",
+    "\n",
+    "session.show() # open the document in a browser\n",
+    "\n",
+    "session.loop_until_closed() # run forever"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": [
+    "q = curdoc()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "q.select"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 2",
+   "language": "python",
+   "name": "python2"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 2
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython2",
+   "version": "2.7.11"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 0
+}

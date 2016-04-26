@@ -3,7 +3,7 @@ import time
 import struct
 
 
-UDP_IP = "172.20.10.6"
+UDP_IP = "192.168.1.101"
 UDP_PORT = 8888
 MESSAGE = "GET_DATA"
 #MESSAGE = "GET_INFO"
